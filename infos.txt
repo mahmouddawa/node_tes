@@ -1,0 +1,34 @@
+Clustering in Node.js
+
+
+const express = require('express');
+const app = express();
+
+
+function doWork(duration){
+  const start = Date.now();
+  while(Date.now() - start > duration){}
+}
+
+app.get('/', (req,res)=>{
+  doWork(5000);
+  res.send('Hi from Express');
+});
+
+
+app.listen(3001, ()=>{
+  console.log('listening on port 3001');
+} );
+
+this code above will run the doWork function for 5 second and nothing else will 
+run on the event-loop till the end of those 5 seconds, this means the server will
+have nothing else to do till 5 seconds.
+
+Section 1
+solving the issue with Clustering
+
+
+ab -c 50 -n 500 localhost:3001/fast
+this can be readed as follwing: 
+use the Apache benchmark to make a request to localhost 30001/fast total of 500 request(-n 500)
+use a concurrency of 50 "50 request at a time"(-c 50)
